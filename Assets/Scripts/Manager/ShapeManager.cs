@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -27,27 +28,15 @@ public class ShapeManager : MonoBehaviour
     public void OnShapePlaced(BlockShape placedShape)
     {
         if (!currentShapes.Contains(placedShape)) return;
+
         currentShapes.Remove(placedShape);
         ShapePoolManager.Instance.ReturnShape(placedShape);
-        GridSystem.Instance.CheckAndClearLines();
-            
-        //Check if remaining shapes can be placed
-        if (currentShapes.Count > 0)
-        {
-            List<BlockShapeData> remainingData = currentShapes.ConvertAll(s => s.shapeData);
-            if (!GridSystem.Instance.CanAnyShapeBePlaced(remainingData))
-            {
-                GameEvents.OnGameOver?.Invoke();
-                return;
-            }
-        }
-
-        //Refill only if all shapes are placed
-        if (currentShapes.Count == 0)
-        {
-            Invoke(nameof(SpawnShapes), 0.3f);
-        }
+        GameEvents.OnBlockPlaced?.Invoke();
+        GridManager.Instance.CheckAndClearLines();
+        
+        StartCoroutine(DeferredCheckAfterClear());
     }
+
     
     public void ClearAllCurrentShapes()
     {
@@ -59,5 +48,26 @@ public class ShapeManager : MonoBehaviour
             }
         }
         currentShapes.Clear();
+    }
+    
+    private IEnumerator DeferredCheckAfterClear()
+    {
+        yield return null; 
+
+        if (currentShapes.Count > 0)
+        {
+            var remainingData = currentShapes.ConvertAll(s => s.shapeData);
+            if (!GridManager.Instance.CanAnyShapeBePlaced(remainingData))
+            {
+                GameEvents.OnGameOver?.Invoke();
+                yield break;
+            }
+        }
+
+        if (currentShapes.Count == 0)
+        {
+            yield return new WaitForSeconds(0.2f);
+            SpawnShapes();
+        }
     }
 }

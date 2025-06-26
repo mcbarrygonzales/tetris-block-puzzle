@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [Header("UI Elements")]
     public GameObject gameOverPanel;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI highScoreText;
 
     private void Awake()
     {
@@ -31,5 +32,11 @@ public class UIManager : MonoBehaviour
         {
             scoreText.text = $"Score: {score}";
         }
+    }
+    
+    public void UpdateHighScore(int highScore)
+    {
+        if (highScoreText != null)
+            highScoreText.text = $"High Score: {highScore}";
     }
 }

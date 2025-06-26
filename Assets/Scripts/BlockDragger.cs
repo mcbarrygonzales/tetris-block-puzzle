@@ -55,7 +55,7 @@ public class BlockDragger : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1f;
 
-        bool placed = GridSystem.Instance.TryPlaceShape(shape);
+        bool placed = GridManager.Instance.TryPlaceShape(shape);
         if (placed && !shape.isPlaced)
         {
             shape.isPlaced = true;

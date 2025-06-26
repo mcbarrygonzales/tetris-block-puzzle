@@ -26,5 +26,14 @@ public class GridCell : MonoBehaviour
             image.color = new Color(1, 1, 1, 1); 
         }
     }
+    
+    public void AnimateClear()
+    {
+        LeanTween.scale(gameObject, Vector3.zero, 0.15f).setEaseOutBack().setOnComplete(() =>
+        {
+            SetOccupied(false);
+            transform.localScale = Vector3.one;
+        });
+    }
 
 }

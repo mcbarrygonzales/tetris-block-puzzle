@@ -1,11 +1,13 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
    public static GameManager Instance;
    
+   [FormerlySerializedAs("m_gridSystem")]
    [Header("Managers")] 
-   [SerializeField] private GridSystem m_gridSystem;
+   [SerializeField] private GridManager m_gridManager;
    [SerializeField] private ShapeManager m_shapeManager;
    [SerializeField] private ScoreManager m_scoreManager;
    [SerializeField] private UIManager m_uiManager;
@@ -37,7 +39,7 @@ public class GameManager : MonoBehaviour
 
    public void StartGame()
    {
-      m_gridSystem.InitializeGrid();
+      m_gridManager.InitializeGrid();
       m_scoreManager.ResetScore();
       m_uiManager.HideGameOver();
       m_shapeManager.SpawnShapes();
@@ -50,7 +52,7 @@ public class GameManager : MonoBehaviour
 
    public void RestartGame()
    {
-      m_gridSystem.ResetGrid();
+      m_gridManager.ResetGrid();
       m_scoreManager.ResetScore();
       m_uiManager.HideGameOver();
       m_shapeManager.ClearAllCurrentShapes();
