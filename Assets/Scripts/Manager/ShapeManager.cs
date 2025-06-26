@@ -23,6 +23,13 @@ public class ShapeManager : MonoBehaviour
             shape.isPlaced = false;
             currentShapes.Add(shape);
         }
+        
+        List<BlockShapeData> remainingData = currentShapes.ConvertAll(s => s.shapeData);
+        if (!GridManager.Instance.CanAnyShapeBePlaced(remainingData))
+        {
+            GameEvents.OnGameOver?.Invoke();
+           
+        }
     }
 
     public void OnShapePlaced(BlockShape placedShape)
@@ -52,7 +59,7 @@ public class ShapeManager : MonoBehaviour
     
     private IEnumerator DeferredCheckAfterClear()
     {
-        yield return null; 
+        yield return new WaitForSeconds(0.2f); 
 
         if (currentShapes.Count > 0)
         {
